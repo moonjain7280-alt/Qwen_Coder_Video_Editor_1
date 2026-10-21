@@ -62,6 +62,14 @@ export default function App() {
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   const processingRef = useRef(false);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [previewMode, setPreviewMode] = useState<'original' | 'processed' | 'compare'>('original');
+
+  const handlePreview = useCallback(() => {
+    // Switch to processed view and scroll to preview area
+    setPreviewMode('processed');
+    previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   // Pre-load FFmpeg on mount
   useEffect(() => {
@@ -190,6 +198,12 @@ export default function App() {
       setProcessingMessage('Video processing complete!');
       setCurrentStep(4);
 
+      // Scroll to preview and switch to processed view after a short delay
+      setTimeout(() => {
+        setPreviewMode('processed');
+        previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 500);
+
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Processing failed with an unknown error.';
       setProcessingStatus('error');
@@ -243,7 +257,6 @@ export default function App() {
 
   const isProcessing = processingStatus !== 'idle' && processingStatus !== 'completed' && processingStatus !== 'error';
   const isProcessed = processedBlob !== null;
-  const previewUrl = isProcessed ? processedUrl : videoUrl;
 
   // Check if any settings have changed from defaults
   const hasEnhanceChanges = enhance.brightness !== 100 || enhance.contrast !== 100 || 
@@ -327,12 +340,16 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column - Preview & Download */}
               <div className="lg:col-span-2 space-y-6">
-                <VideoPreview 
-                  videoUrl={previewUrl}
-                  enhance={isProcessed ? { brightness: 100, contrast: 100, sharpness: 0, saturation: 100, volume: 100 } : enhance}
-                  isProcessed={isProcessed}
-                  isOriginal={!isProcessed}
-                />
+                <div ref={previewRef}>
+                  <VideoPreview 
+                    originalUrl={videoUrl}
+                    processedUrl={processedUrl || videoUrl}
+                    enhance={enhance}
+                    isProcessed={isProcessed}
+                    viewMode={previewMode}
+                    onViewModeChange={setPreviewMode}
+                  />
+                </div>
 
                 {/* Video Info */}
                 <div className="glass-card p-4">
@@ -364,6 +381,7 @@ export default function App() {
                   <DownloadSection 
                     onDownload={handleDownload} 
                     onReset={handleReset}
+                    onPreview={handlePreview}
                     videoFile={videoFile}
                     processedSize={processedBlob ? processedBlob.size : 0}
                     settings={settings}
@@ -464,6 +482,20 @@ export default function App() {
           onRetry={processingStatus === 'error' ? handleProcessVideo : undefined}
           onCancel={processingStatus === 'completed' ? () => setProcessingStatus('idle') : undefined}
         />
+      )}
+
+      {/* Floating Preview Button - appears when video is processed */}
+      {isProcessed && !isProcessing && (
+        <button
+          onClick={handlePreview}
+          className="fixed bottom-6 right-6 z-30 flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium shadow-xl shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-105 active:scale-95 transition-all duration-200"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          Preview Changes
+        </button>
       )}
     </div>
   );
