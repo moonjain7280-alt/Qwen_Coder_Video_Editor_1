@@ -32,7 +32,7 @@ const aspectRatios = [
 const resolutions = [
   { id: '720p', label: '720p', desc: 'HD' },
   { id: '1080p', label: '1080p', desc: 'Full HD' },
-  { id: '4k', label: '4K', desc: 'Ultra HD' },
+  { id: '4k', label: '4K', desc: 'Ultra HD*' },
 ];
 
 const subtitleStyles = [
@@ -71,7 +71,10 @@ export default function VideoSettings({ settings, onChange }: Props) {
 
       {/* Editing Style */}
       <div>
-        <label className="text-sm text-gray-400 mb-2 block">Editing Style</label>
+        <label className="text-sm text-gray-400 mb-2 flex items-center gap-2">
+          Editing Style
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">AI Coming Soon</span>
+        </label>
         <div className="flex flex-wrap gap-2">
           {editingStyles.map(style => (
             <button
@@ -83,6 +86,7 @@ export default function VideoSettings({ settings, onChange }: Props) {
             </button>
           ))}
         </div>
+        <p className="text-[10px] text-gray-600 mt-1.5">Editing styles will apply AI-powered scene detection and pacing when available.</p>
       </div>
 
       {/* Aspect Ratio */}
@@ -104,11 +108,12 @@ export default function VideoSettings({ settings, onChange }: Props) {
             </button>
           ))}
         </div>
+        <p className="text-[10px] text-gray-600 mt-1.5">Applied via FFmpeg scale+crop during export.</p>
       </div>
 
       {/* Resolution */}
       <div>
-        <label className="text-sm text-gray-400 mb-2 block">Resolution</label>
+        <label className="text-sm text-gray-400 mb-2 block">Output Resolution</label>
         <div className="grid grid-cols-3 gap-2">
           {resolutions.map(res => (
             <button
@@ -125,40 +130,24 @@ export default function VideoSettings({ settings, onChange }: Props) {
             </button>
           ))}
         </div>
+        <p className="text-[10px] text-gray-600 mt-1.5">*4K output limited by source quality and browser memory. Processing 4K may fail on devices with less than 8GB RAM.</p>
       </div>
 
       {/* Subtitles */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-sm text-gray-400">Subtitles</label>
-          <button
-            onClick={() => onChange({ subtitles: !settings.subtitles })}
-            className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
-              settings.subtitles ? 'bg-purple-600' : 'bg-white/10'
-            }`}
-          >
-            <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform duration-200 shadow ${
-              settings.subtitles ? 'translate-x-5' : 'translate-x-0'
-            }`} />
-          </button>
-        </div>
-        
-        {settings.subtitles && (
-          <div className="mt-2">
-            <label className="text-xs text-gray-500 mb-1.5 block">Subtitle Style</label>
-            <div className="flex flex-wrap gap-2">
-              {subtitleStyles.map(style => (
-                <button
-                  key={style.id}
-                  onClick={() => onChange({ subtitleStyle: style.id })}
-                  className={`chip text-xs ${settings.subtitleStyle === style.id ? 'chip-active' : 'chip-inactive'}`}
-                >
-                  {style.label}
-                </button>
-              ))}
-            </div>
+          <label className="text-sm text-gray-400 flex items-center gap-2">
+            Subtitles
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Coming Soon</span>
+          </label>
+          <div className="relative w-11 h-6 rounded-full bg-white/10 cursor-not-allowed opacity-50">
+            <div className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow" />
           </div>
-        )}
+        </div>
+        <p className="text-[10px] text-gray-600">
+          AI subtitle generation requires a speech-to-text API (e.g., OpenAI Whisper). 
+          This feature will be available when an API key is configured.
+        </p>
       </div>
     </div>
   );

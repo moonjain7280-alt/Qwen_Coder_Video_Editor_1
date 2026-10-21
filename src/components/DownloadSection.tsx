@@ -1,11 +1,16 @@
+import type { VideoSettings } from '../types';
+
 interface Props {
   onDownload: () => void;
   onReset: () => void;
   videoFile: File;
+  processedSize: number;
+  settings: VideoSettings;
 }
 
-export default function DownloadSection({ onDownload, onReset, videoFile }: Props) {
-  const fileSize = (videoFile.size / (1024 * 1024)).toFixed(1);
+export default function DownloadSection({ onDownload, onReset, videoFile, processedSize, settings }: Props) {
+  const inputSize = (videoFile.size / (1024 * 1024)).toFixed(1);
+  const outputSize = (processedSize / (1024 * 1024)).toFixed(1);
 
   return (
     <div className="glass-card p-5">
@@ -17,9 +22,9 @@ export default function DownloadSection({ onDownload, onReset, videoFile }: Prop
             </svg>
           </div>
           <div>
-            <h3 className="font-semibold text-white">Video Ready!</h3>
+            <h3 className="font-semibold text-white">Video Exported Successfully</h3>
             <p className="text-sm text-gray-400">
-              {videoFile.name} • {fileSize} MB • AI Enhanced
+              Processed with FFmpeg • Real MP4 output
             </p>
           </div>
         </div>
@@ -41,24 +46,39 @@ export default function DownloadSection({ onDownload, onReset, videoFile }: Prop
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
-            Download
+            Download MP4
           </button>
         </div>
       </div>
 
       {/* Export details */}
       <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {[
-          { label: 'Format', value: 'MP4' },
-          { label: 'Quality', value: 'Enhanced' },
-          { label: 'Processing', value: 'AI v2.0' },
-          { label: 'Status', value: 'Complete' },
-        ].map(item => (
-          <div key={item.label} className="text-center p-2 rounded-lg bg-white/[0.03]">
-            <div className="text-xs text-gray-500">{item.label}</div>
-            <div className="text-sm font-medium text-gray-300 mt-0.5">{item.value}</div>
-          </div>
-        ))}
+        <div className="text-center p-2 rounded-lg bg-white/[0.03]">
+          <div className="text-xs text-gray-500">Input</div>
+          <div className="text-sm font-medium text-gray-300 mt-0.5">{inputSize} MB</div>
+        </div>
+        <div className="text-center p-2 rounded-lg bg-white/[0.03]">
+          <div className="text-xs text-gray-500">Output</div>
+          <div className="text-sm font-medium text-green-300 mt-0.5">{outputSize} MB</div>
+        </div>
+        <div className="text-center p-2 rounded-lg bg-white/[0.03]">
+          <div className="text-xs text-gray-500">Resolution</div>
+          <div className="text-sm font-medium text-gray-300 mt-0.5">{settings.resolution}</div>
+        </div>
+        <div className="text-center p-2 rounded-lg bg-white/[0.03]">
+          <div className="text-xs text-gray-500">Aspect Ratio</div>
+          <div className="text-sm font-medium text-gray-300 mt-0.5">{settings.aspectRatio}</div>
+        </div>
+      </div>
+
+      {/* Technical details */}
+      <div className="mt-3 pt-3 border-t border-white/5">
+        <div className="flex flex-wrap items-center gap-2 text-[10px] text-gray-600">
+          <span className="px-2 py-0.5 rounded bg-white/5">Codec: H.264</span>
+          <span className="px-2 py-0.5 rounded bg-white/5">Audio: AAC 128k</span>
+          <span className="px-2 py-0.5 rounded bg-white/5">Container: MP4</span>
+          <span className="px-2 py-0.5 rounded bg-white/5">Engine: FFmpeg.wasm</span>
+        </div>
       </div>
     </div>
   );

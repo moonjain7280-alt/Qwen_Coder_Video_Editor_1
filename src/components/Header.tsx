@@ -12,14 +12,14 @@ export default function Header() {
             <h1 className="text-xl font-bold bg-gradient-to-r from-purple-300 to-indigo-300 bg-clip-text text-transparent">
               My AI Video Studio
             </h1>
-            <p className="text-xs text-gray-500 hidden sm:block">AI-Powered Video Editing</p>
+            <p className="text-xs text-gray-500 hidden sm:block">FFmpeg-Powered Video Editing</p>
           </div>
         </div>
         
         <div className="flex items-center gap-3">
           <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-600/10 border border-purple-500/20">
-            <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-xs text-purple-300 font-medium">AI Engine Active</span>
+            <div className="w-2 h-2 rounded-full bg-green-400" />
+            <span className="text-xs text-purple-300 font-medium">FFmpeg.wasm Active</span>
           </div>
           <button className="btn-secondary text-sm flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

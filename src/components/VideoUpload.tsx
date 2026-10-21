@@ -41,7 +41,7 @@ export default function VideoUpload({ onUpload }: Props) {
           Transform Your Videos with AI
         </h2>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
-          Upload your video and let our AI enhance it with professional editing, effects, and optimization.
+          Upload your video for real FFmpeg-powered enhancement, trimming, and export. All processing happens locally in your browser.
         </p>
       </div>
 
@@ -74,8 +74,9 @@ export default function VideoUpload({ onUpload }: Props) {
         <div className="flex items-center gap-2 mt-2">
           <span className="px-3 py-1 rounded-full bg-white/5 text-xs text-gray-400 border border-white/10">MP4</span>
           <span className="px-3 py-1 rounded-full bg-white/5 text-xs text-gray-400 border border-white/10">MOV</span>
+          <span className="px-3 py-1 rounded-full bg-white/5 text-xs text-gray-400 border border-white/10">WebM</span>
           <span className="px-3 py-1 rounded-full bg-white/5 text-xs text-gray-400 border border-white/10">AVI</span>
-          <span className="px-3 py-1 rounded-full bg-white/5 text-xs text-gray-400 border border-white/10">WEBM</span>
+          <span className="px-3 py-1 rounded-full bg-white/5 text-xs text-gray-400 border border-white/10">Max 200MB</span>
         </div>
 
         <input
@@ -90,16 +91,29 @@ export default function VideoUpload({ onUpload }: Props) {
       {/* Features */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 w-full max-w-3xl">
         {[
-          { icon: '🎬', title: 'Smart Editing', desc: 'AI detects scenes & applies cuts' },
-          { icon: '✨', title: 'Auto Enhance', desc: 'Brightness, color & audio fix' },
-          { icon: '📱', title: 'Multi-Format', desc: 'Shorts, reels, cinematic & more' },
+          { icon: '🎬', title: 'Real FFmpeg Processing', desc: 'Actual video enhancement & encoding', badge: 'Working' },
+          { icon: '✨', title: 'Video Enhancement', desc: 'Brightness, contrast, saturation, sharpness', badge: 'Working' },
+          { icon: '📱', title: 'Format & Trim', desc: 'Aspect ratio, resolution, video trimming', badge: 'Working' },
         ].map((feature) => (
-          <div key={feature.title} className="glass-card p-4 text-center">
+          <div key={feature.title} className="glass-card p-4 text-center relative">
             <div className="text-2xl mb-2">{feature.icon}</div>
             <h3 className="font-semibold text-sm text-white">{feature.title}</h3>
             <p className="text-xs text-gray-500 mt-1">{feature.desc}</p>
+            <span className="absolute top-2 right-2 text-[9px] px-1.5 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">
+              {feature.badge}
+            </span>
           </div>
         ))}
+      </div>
+
+      {/* Technical note */}
+      <div className="mt-8 max-w-2xl w-full">
+        <div className="glass-card p-4 text-center">
+          <p className="text-xs text-gray-500">
+            <span className="text-purple-400 font-medium">How it works:</span> Videos are processed using FFmpeg.wasm directly in your browser. 
+            No data is uploaded to any server. Maximum file size: 200MB. Processing speed depends on your device performance.
+          </p>
+        </div>
       </div>
     </div>
   );
